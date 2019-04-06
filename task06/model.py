@@ -121,7 +121,7 @@ class Function(ASTNode):
         return self
 
     def accept(self, visitor):
-        return visitor.function(self)
+        return visitor.visit_function(self)
 
 
 class FunctionDefinition(ASTNode):
@@ -199,9 +199,6 @@ class Print(ASTNode):
 
     def accept(self, visitor):
         return visitor.visit_print(self)
-
-    def accept(self, visitor):
-        return visitor.visit_read(self)
 
 
 class Read(ASTNode):
