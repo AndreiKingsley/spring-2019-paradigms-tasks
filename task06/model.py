@@ -224,7 +224,7 @@ class Read(ASTNode):
         return number
 
     def accept(self, visitor):
-        return visitor.read(self)
+        return visitor.visit_read(self)
 
 
 class FunctionCall(ASTNode):
