@@ -79,17 +79,18 @@ def test_pretty_print(capsys):
             ],
         ),
     ])))
-    expected_result = \
-        'def main(arg1) {\n' + \
-        '    read x;\n' + \
-        '    print x;\n' + \
-        '    if ((2) == (3)) {\n' + \
-        '        if (1) {\n' + \
-        '        }\n' + \
-        '    } else {\n' + \
-        '        exit((-(arg1)));\n' + \
-        '    }\n' + \
-        '}\n'
+    expected_result = '''\
+def main(arg1) {
+    read x;
+    print x;
+    if ((2) == (3)) {
+        if (1) {
+        }
+    } else {
+        exit((-(arg1)));
+    }
+}
+'''
     out, err = capsys.readouterr()
     assert not err
     assert out == expected_result
