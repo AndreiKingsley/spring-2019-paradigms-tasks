@@ -117,6 +117,10 @@ class Function(ASTNode):
         self.args = args
         self.body = body
 
+    def __eq__(self, other):
+        return self.args == other.args \
+               and self.body == self.body
+
     def evaluate(self, scope):
         return self
 
@@ -136,6 +140,10 @@ class FunctionDefinition(ASTNode):
     def __init__(self, name, function):
         self.name = name
         self.function = function
+
+    def __eq__(self, other):
+        return self.name == other.name \
+               and self.function == self.function
 
     def evaluate(self, scope):
         scope[self.name] = self.function
@@ -163,6 +171,11 @@ class Conditional(ASTNode):
         self.condition = condition
         self.if_true = if_true
         self.if_false = if_false
+
+    def __eq__(self, other):
+        return self.condition == other.condition \
+               and self.if_true == other.if_true \
+               and self.if_false == other.if_false
 
     def evaluate(self, scope):
         statements = self.if_true if (
