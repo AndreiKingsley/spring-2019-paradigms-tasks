@@ -45,6 +45,7 @@ def test_func_def_with_binop():
     )
     assert fold_constants(op) == expected_result
 
+
 def test_multiplication_zero_left():
     op = BinaryOperation(Number(0), '*', Number(6))
     assert fold_constants(op) == Number(0)
