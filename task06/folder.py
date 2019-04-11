@@ -17,7 +17,7 @@ class ConstantFolder(ASTNodeVisitor):
     def visit_function_definition(self, function_definition_obj):
         return FunctionDefinition(
             function_definition_obj.name,
-            function_definition_obj.accept(self)
+            function_definition_obj.function.accept(self)
         )
 
     def visit_conditional(self, conditional_obj):

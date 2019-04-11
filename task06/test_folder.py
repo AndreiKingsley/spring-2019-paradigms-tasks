@@ -14,6 +14,37 @@ def test_unop_num():
     assert fold_constants(op) == Number(0)
 
 
+def test_conditional_with_binop():
+    op = Conditional(
+        BinaryOperation(Number(2), "==", Number(4)),
+        [],
+        [BinaryOperation(Number(4), "+", Number(0))]
+    )
+    expected_result = Conditional(
+        Number(0),
+        [],
+        [Number(4)]
+    )
+    assert fold_constants(op) == expected_result
+
+
+def test_func_def_with_binop():
+    op = FunctionDefinition(
+        'foo',
+        Function(
+            ['x'],
+            [BinaryOperation(Number(2), "*", Number(3))]
+        )
+    )
+    expected_result = FunctionDefinition(
+        'foo',
+        Function(
+            ['x'],
+            [Number(6)]
+        )
+    )
+    assert fold_constants(op) == expected_result
+
 def test_multiplication_zero_left():
     op = BinaryOperation(Number(0), '*', Number(6))
     assert fold_constants(op) == Number(0)
