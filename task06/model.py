@@ -118,8 +118,7 @@ class Function(ASTNode):
         self.body = body
 
     def __eq__(self, other):
-        return self.args == other.args \
-               and self.body == self.body
+        return self.args == other.args and self.body == self.body
 
     def evaluate(self, scope):
         return self

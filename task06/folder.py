@@ -50,8 +50,7 @@ class ConstantFolder(ASTNodeVisitor):
         rhs = binary_operation_obj.rhs.accept(self)
         op = binary_operation_obj.op
         if isinstance(lhs, Number) and isinstance(rhs, Number):
-            s = Scope()
-            return BinaryOperation(lhs, op, rhs).evaluate(s)
+            return BinaryOperation(lhs, op, rhs).evaluate(Scope())
         if op == '*':
             left_is_zero = isinstance(lhs, Number) and lhs == Number(0)
             right_is_zero = isinstance(rhs, Number) and rhs == Number(0)
@@ -73,8 +72,7 @@ class ConstantFolder(ASTNodeVisitor):
             unary_operation_obj.expr.accept(self)
         )
         if isinstance(unary_operation_obj.expr.accept(self), Number):
-            s = Scope()
-            folded_op = folded_op.evaluate(s)
+            return folded_op.evaluate(Scope())
         return folded_op
 
     def visit_program(self, program):

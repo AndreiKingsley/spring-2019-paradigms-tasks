@@ -47,7 +47,7 @@ def test_func_def_with_binop():
 
 
 def test_multiplication_zero_left():
-    op = BinaryOperation(Number(0), '*', Number(6))
+    op = BinaryOperation(Number(0), '*', Reference('y'))
     assert fold_constants(op) == Number(0)
 
 
@@ -61,8 +61,8 @@ def test_difference_same():
     assert fold_constants(op) == Number(0)
 
 
-def test_fold_constants_with_pretty_printer(capsys):
-    pretty_print(fold_constants(
+def test_fold_constants():
+    res = fold_constants(
         BinaryOperation(
             Number(10),
             '-',
@@ -79,12 +79,10 @@ def test_fold_constants_with_pretty_printer(capsys):
                 )
             )
         )
-    ))
-    expected_result = '13;\n'
-    out, err = capsys.readouterr()
-    assert not err
-    assert out == expected_result
+    )
+    expected_result = Number(13)
+    assert res == expected_result
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     pytest.main()
