@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 from model import *
 
 
@@ -56,8 +54,8 @@ class ConstantFolder(ASTNodeVisitor):
             right_is_zero = isinstance(rhs, Number) and rhs == Number(0)
             left_is_ref = isinstance(lhs, Reference)
             right_is_ref = isinstance(rhs, Reference)
-            if (left_is_zero and right_is_ref) \
-                    or (right_is_zero and left_is_ref):
+            if (left_is_zero and right_is_ref or
+                    right_is_zero and left_is_ref):
                 return Number(0)
         if op == '-':
             left_name = lhs.name if isinstance(lhs, Reference) else None

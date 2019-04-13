@@ -6,55 +6,57 @@ from model import *
 from printer import *
 
 
-def test_vist_conditional():
-    res = PrettyPrint().visit_program(Conditional(Number(42), [], []))
+def test_visit_conditional():
+    res = PrettyPrint().visit_conditional(Conditional(Number(42), [], []))
     expected_result = 'if (42) {\n}'
     assert res == expected_result
 
 
-def test_vist_function_definition():
-    res = PrettyPrint().visit_program(
-        FunctionDefinition("foo", Function([], []))
+def test_visit_function_definition():
+    res = PrettyPrint().visit_function_definition(
+        FunctionDefinition('foo', Function([], []))
     )
     expected_result = 'def foo() {\n}'
     assert res == expected_result
 
 
-def test_vist_print():
-    res = PrettyPrint().visit_program(Print(Number(42)))
-    expected_result = 'print 42;'
+def test_visit_print():
+    res = PrettyPrint().visit_print(Print(Number(42)))
+    expected_result = 'print 42'
     assert res == expected_result
 
 
-def test_vist_read():
-    res = PrettyPrint().visit_program(Read('x'))
-    expected_result = 'read x;'
+def test_visit_read():
+    res = PrettyPrint().visit_read(Read('x'))
+    expected_result = 'read x'
     assert res == expected_result
 
 
-def test_vist_number():
-    res = PrettyPrint().visit_program(Number(10))
-    expected_result = '10;'
+def test_visit_number():
+    res = PrettyPrint().visit_number(Number(10))
+    expected_result = '10'
     assert res == expected_result
 
 
-def test_vist_reference():
-    res = PrettyPrint().visit_program(Reference('x'))
-    expected_result = 'x;'
+def test_visit_reference():
+    res = PrettyPrint().visit_reference(Reference('x'))
+    expected_result = 'x'
     assert res == expected_result
 
 
-def test_vist_binary_operation():
+def test_visit_binary_operation():
     add = BinaryOperation(Number(2), '+', Number(3))
     mul = BinaryOperation(Number(1), '*', add)
-    res = PrettyPrint().visit_program(mul)
-    expected_result = '((1) * ((2) + (3)));'
+    res = PrettyPrint().visit_binary_operation(mul)
+    expected_result = '(1) * ((2) + (3))'
     assert res == expected_result
 
 
-def test_vist_unary_operation():
-    res = PrettyPrint().visit_program(UnaryOperation('-', Number(42)))
-    expected_result = '(-(42));'
+def test_visit_unary_operation():
+    res = PrettyPrint().visit_unary_operation(
+        UnaryOperation('-', Number(42))
+    )
+    expected_result = '-(42)'
     assert res == expected_result
 
 
@@ -82,9 +84,9 @@ def test_pretty_print(capsys):
             if (1) {
             }
         } else {
-            exit((-(arg1)));
+            exit(-(arg1));
         }
-    }
+    }\n
     ''')
     out, err = capsys.readouterr()
     assert not err
