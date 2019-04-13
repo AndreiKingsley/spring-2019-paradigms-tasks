@@ -69,7 +69,7 @@ class ConstantFolder(ASTNodeVisitor):
             unary_operation_obj.op,
             unary_operation_obj.expr.accept(self)
         )
-        if isinstance(unary_operation_obj.expr.accept(self), Number):
+        if isinstance(folded_op.expr, Number):
             return folded_op.evaluate(Scope())
         return folded_op
 

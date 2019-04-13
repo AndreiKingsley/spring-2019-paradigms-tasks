@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import pytest
 from folder import *
 from printer import *
 

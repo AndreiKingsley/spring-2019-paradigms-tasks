@@ -18,12 +18,13 @@ class PrettyPrint(ASTNodeVisitor):
         return res
 
     def visit_block(self, statements):
-        res = ''  # 'res' must be initalized
+        res = ' {\n'
         self.indent_size += DEFAULT_INDENT
         for statement in statements or []:
             res += self.get_indent() + statement.accept(self)
             res = self.make_statement(res)
         self.indent_size -= DEFAULT_INDENT
+        res += self.get_indent() + '}'
         return res
 
     def visit_number(self, number_obj):
@@ -37,22 +38,18 @@ class PrettyPrint(ASTNodeVisitor):
         res = 'def ' + function_definition_obj.name
         cur_func = function_definition_obj.function
         res += '('
-        if cur_func.args:
-            res += ', '.join(cur_func.args)
+        res += ', '.join(cur_func.args)
         res += ')'
-        res += ' {\n'
         res += self.visit_block(cur_func.body)
-        res += self.get_indent() + '}'
         return res
 
     def visit_conditional(self, conditional_obj):
         condition = '(' + conditional_obj.condition.accept(self) + ')'
-        res = 'if ' + condition + ' {\n'
+        res = 'if ' + condition
         res += self.visit_block(conditional_obj.if_true)
         if conditional_obj.if_false:
-            res += self.get_indent() + '} else {\n'
+            res += ' else'
             res += self.visit_block(conditional_obj.if_false)
-        res += self.get_indent() + '}'
         return res
 
     def visit_print(self, print_obj):
@@ -65,7 +62,7 @@ class PrettyPrint(ASTNodeVisitor):
         res = function_call_obj.fun_expr.accept(self)
         res += '('
         res += ', '.join(
-            arg.accept(self) for arg in function_call_obj.args or []
+            arg.accept(self) for arg in function_call_obj.args
         )
         res += ')'
         return res
@@ -84,7 +81,10 @@ class PrettyPrint(ASTNodeVisitor):
 
     def visit_program(self, program):
         res = program.accept(self)
-        return self.make_statement(res)
+        if not res.endswith('}'):
+            res += ';'
+        # not make_statement
+        return res
 
 
 def pretty_print(program):

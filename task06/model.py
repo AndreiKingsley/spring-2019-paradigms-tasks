@@ -278,7 +278,8 @@ class FunctionCall(ASTNode):
         return res
 
     def __eq__(self, other):
-        return self.fun_expr == self.args
+        return (self.fun_expr == other.fun_expr and
+                self.args == other.args)
 
     def accept(self, visitor):
         return visitor.visit_function_call(self)

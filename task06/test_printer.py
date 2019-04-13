@@ -7,39 +7,44 @@ from printer import *
 
 
 def test_visit_conditional():
-    res = PrettyPrint().visit_conditional(Conditional(Number(42), [], []))
+    res = Conditional(
+        Number(42),
+        [],
+        []
+    ).accept(PrettyPrint())
     expected_result = 'if (42) {\n}'
     assert res == expected_result
 
 
 def test_visit_function_definition():
-    res = PrettyPrint().visit_function_definition(
-        FunctionDefinition('foo', Function([], []))
-    )
+    res = FunctionDefinition(
+        'foo',
+        Function([], [])
+    ).accept(PrettyPrint())
     expected_result = 'def foo() {\n}'
     assert res == expected_result
 
 
 def test_visit_print():
-    res = PrettyPrint().visit_print(Print(Number(42)))
+    res = Print(Number(42)).accept(PrettyPrint())
     expected_result = 'print 42'
     assert res == expected_result
 
 
 def test_visit_read():
-    res = PrettyPrint().visit_read(Read('x'))
+    res = Read('x').accept(PrettyPrint())
     expected_result = 'read x'
     assert res == expected_result
 
 
 def test_visit_number():
-    res = PrettyPrint().visit_number(Number(10))
+    res = Number(10).accept(PrettyPrint())
     expected_result = '10'
     assert res == expected_result
 
 
 def test_visit_reference():
-    res = PrettyPrint().visit_reference(Reference('x'))
+    res = Reference('x').accept(PrettyPrint())
     expected_result = 'x'
     assert res == expected_result
 
@@ -47,15 +52,16 @@ def test_visit_reference():
 def test_visit_binary_operation():
     add = BinaryOperation(Number(2), '+', Number(3))
     mul = BinaryOperation(Number(1), '*', add)
-    res = PrettyPrint().visit_binary_operation(mul)
+    res = mul.accept(PrettyPrint())
     expected_result = '(1) * ((2) + (3))'
     assert res == expected_result
 
 
 def test_visit_unary_operation():
-    res = PrettyPrint().visit_unary_operation(
-        UnaryOperation('-', Number(42))
-    )
+    res = UnaryOperation(
+        '-',
+        Number(42)
+    ).accept(PrettyPrint())
     expected_result = '-(42)'
     assert res == expected_result
 
@@ -86,7 +92,7 @@ def test_pretty_print(capsys):
         } else {
             exit(-(arg1));
         }
-    }\n
+    }
     ''')
     out, err = capsys.readouterr()
     assert not err
