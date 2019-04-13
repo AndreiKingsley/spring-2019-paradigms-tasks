@@ -24,9 +24,9 @@ class ConstantFolder(ASTNodeVisitor):
         return Conditional(
             conditional_obj.condition.accept(self),
             [statement.accept(self)
-             for statement in conditional_obj.if_true],
+             for statement in conditional_obj.if_true or []],
             [statement.accept(self)
-             for statement in conditional_obj.if_false]
+             for statement in conditional_obj.if_false or []]
         )
 
     def visit_print(self, print_obj):
@@ -55,22 +55,24 @@ class ConstantFolder(ASTNodeVisitor):
         if op == '*':
             left_is_zero = isinstance(lhs, Number) and lhs == Number(0)
             right_is_zero = isinstance(rhs, Number) and rhs == Number(0)
-            if left_is_zero or right_is_zero:
+            left_is_ref = isinstance(lhs, Reference)
+            right_is_ref = isinstance(rhs, Reference)
+            if (left_is_zero and right_is_ref) \
+                    or (right_is_zero and left_is_ref):
                 return Number(0)
         if op == '-':
-            left_name = lhs.name if isinstance(lhs, Reference) else ''
-            right_name = rhs.name if isinstance(rhs, Reference) else ''
-            if left_name != '' and left_name == right_name:
+            left_name = lhs.name if isinstance(lhs, Reference) else None
+            right_name = rhs.name if isinstance(rhs, Reference) else None
+            if left_name and left_name == right_name:
                 return Number(0)
         return BinaryOperation(lhs, op, rhs)
 
     def visit_unary_operation(self, unary_operation_obj):
-        expr = unary_operation_obj.expr.accept(self)
         folded_op = UnaryOperation(
             unary_operation_obj.op,
             unary_operation_obj.expr.accept(self)
         )
-        if isinstance(expr, Number):
+        if isinstance(unary_operation_obj.expr.accept(self), Number):
             s = Scope()
             folded_op = folded_op.evaluate(s)
         return folded_op
