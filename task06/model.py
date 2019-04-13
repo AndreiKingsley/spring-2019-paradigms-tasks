@@ -141,8 +141,8 @@ class FunctionDefinition(ASTNode):
         self.function = function
 
     def __eq__(self, other):
-        return self.name == other.name \
-               and self.function == self.function
+        return (self.name == other.name and
+                self.function == self.function)
 
     def evaluate(self, scope):
         scope[self.name] = self.function
@@ -172,9 +172,9 @@ class Conditional(ASTNode):
         self.if_false = if_false
 
     def __eq__(self, other):
-        return self.condition == other.condition \
-               and self.if_true == other.if_true \
-               and self.if_false == other.if_false
+        return (self.condition == other.condition and
+                self.if_true == other.if_true and
+                self.if_false == other.if_false)
 
     def evaluate(self, scope):
         statements = self.if_true if (
@@ -209,6 +209,9 @@ class Print(ASTNode):
         print(res.value)
         return res
 
+    def __eq__(self, other):
+        return self.expr == other.expr
+
     def accept(self, visitor):
         return visitor.visit_print(self)
 
@@ -231,6 +234,9 @@ class Read(ASTNode):
         number = Number(int(input()))
         scope[self.name] = number
         return number
+
+    def __eq__(self, other):
+        return self.name == other.name
 
     def accept(self, visitor):
         return visitor.visit_read(self)
@@ -271,6 +277,9 @@ class FunctionCall(ASTNode):
             res = statement.evaluate(call_scope)
         return res
 
+    def __eq__(self, other):
+        return self.fun_expr == self.args
+
     def accept(self, visitor):
         return visitor.visit_function_call(self)
 
@@ -287,6 +296,9 @@ class Reference(ASTNode):
 
     def evaluate(self, scope):
         return scope[self.name]
+
+    def __eq__(self, other):
+        return self.name == other.name
 
     def accept(self, visitor):
         return visitor.visit_reference(self)
@@ -339,6 +351,11 @@ class BinaryOperation(ASTNode):
         return Number(int(
             self.OPERATIONS[self.op](l_val, r_val)))
 
+    def __eq__(self, other):
+        return (self.lhs == other.lhs and
+                self.op == other.op and
+                self.rhs == other.rhs)
+
     def accept(self, visitor):
         return visitor.visit_binary_operation(self)
 
@@ -368,6 +385,10 @@ class UnaryOperation(ASTNode):
     def evaluate(self, scope):
         expr_val = self.expr.evaluate(scope).value
         return Number(int(self.OPERATIONS[self.op](expr_val)))
+
+    def __eq__(self, other):
+        return (self.expr == other.expr and
+                self.op == other.op)
 
     def accept(self, visitor):
         return visitor.visit_unary_operation(self)
