@@ -29,8 +29,8 @@ class PrettyPrint(ASTNodeVisitor):
         return str(number_obj.value)
 
     def visit_function(self, function_obj):
-        raise AttributeError(
-            '\'PrettyPrint\' object has no attribute \'visit_function\'')
+        raise TypeError(
+            'Can\'t call \'PrettyPrint\' for \'model.Function\' object')
 
     def visit_function_definition(self, function_definition_obj):
         res = 'def ' + function_definition_obj.name
