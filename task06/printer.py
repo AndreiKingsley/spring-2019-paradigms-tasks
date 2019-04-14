@@ -10,19 +10,14 @@ class PrettyPrint(ASTNodeVisitor):
     def get_indent(self):
         return self.indent_size * ' '
 
-    @staticmethod
-    def make_statement(res):
-        if not res.endswith('}'):
-            res += ';'
-        res += '\n'
-        return res
-
     def visit_block(self, statements):
         res = ' {\n'
         self.indent_size += DEFAULT_INDENT
         for statement in statements or []:
             res += self.get_indent() + statement.accept(self)
-            res = self.make_statement(res)
+            if not res.endswith('}'):
+                res += ';'
+            res += '\n'
         self.indent_size -= DEFAULT_INDENT
         res += self.get_indent() + '}'
         return res
@@ -83,7 +78,6 @@ class PrettyPrint(ASTNodeVisitor):
         res = program.accept(self)
         if not res.endswith('}'):
             res += ';'
-        # not make_statement
         return res
 
 
