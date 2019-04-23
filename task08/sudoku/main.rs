@@ -168,24 +168,35 @@ fn find_solution(f: &mut Field) -> Option<Field> {
 }
 
 
+fn spawn_tasks(f: &mut Field, tx: &std::sync::mpsc::Sender<Option<Field>>, pool: &threadpool::ThreadPool, cur_depth: i32) {
+    if cur_depth == 0 {
+        let tx = tx.clone();
+        let mut f_clone = f.clone();
+        pool.execute(move || tx.send(find_solution(&mut f_clone)).unwrap_or(()));
+    } else {
+        try_extend_field(
+	    f,
+	    |f| {
+		tx.send(Some(f.clone())).unwrap_or(())
+	    },
+            |f| {
+                spawn_tasks(f, tx, pool, cur_depth - 1);
+                None
+            },
+        );
+    }
+}
+
+
+
 /// Перебирает все возможные решения головоломки, заданной параметром `f`, в несколько потоков.
 /// Если хотя бы одно решение `s` существует, возвращает `Some(s)`,
 /// в противном случае возвращает `None`.
 fn find_solution_parallel(mut f: Field) -> Option<Field> {
+    const SPAWN_DEPTH: i32 = 1;
     let pool = threadpool::ThreadPool::new(8);
     let (tx, rx) = std::sync::mpsc::channel();
-    try_extend_field(
-	&mut f,
-	|f| {
-            tx.send(Some(f.clone())).unwrap_or(());
-   	}, 
-	|f| {
-            let tx = tx.clone();
-            let mut f_clone = f.clone();
-            pool.execute(move|| tx.send(find_solution(&mut f_clone)).unwrap_or(()));
-            None
-    	}
-    );
+    spawn_tasks(&mut f, &tx, &pool, SPAWN_DEPTH);
     rx.into_iter().find_map(|x| x)
 }
 
