@@ -1,4 +1,4 @@
-﻿//! Это основной файл с домашним заданием по языку Rust (task08).
+//! Это основной файл с домашним заданием по языку Rust (task08).
 //! Кроме него есть еще модуль `field.rs`, лежащий в этой же папке.
 //!
 //! Чтобы вам было легче ориентироваться, мы постарались прокомментировать весь код, насколько это возможно.
@@ -167,7 +167,6 @@ fn find_solution(f: &mut Field) -> Option<Field> {
     try_extend_field(f, |f_solved| f_solved.clone(), find_solution)
 }
 
-
 fn spawn_tasks(f: &mut Field, tx: &std::sync::mpsc::Sender<Option<Field>>, pool: &threadpool::ThreadPool, cur_depth: i32) {
     if cur_depth == 0 {
         let tx = tx.clone();
@@ -175,10 +174,8 @@ fn spawn_tasks(f: &mut Field, tx: &std::sync::mpsc::Sender<Option<Field>>, pool:
         pool.execute(move || tx.send(find_solution(&mut f_clone)).unwrap_or(()));
     } else {
         try_extend_field(
-	    f,
-	    |f| {
-		tx.send(Some(f.clone())).unwrap_or(())
-	    },
+            f,
+            |f| tx.send(Some(f.clone())).unwrap_or(()),
             |f| {
                 spawn_tasks(f, tx, pool, cur_depth - 1);
                 None
@@ -186,8 +183,6 @@ fn spawn_tasks(f: &mut Field, tx: &std::sync::mpsc::Sender<Option<Field>>, pool:
         );
     }
 }
-
-
 
 /// Перебирает все возможные решения головоломки, заданной параметром `f`, в несколько потоков.
 /// Если хотя бы одно решение `s` существует, возвращает `Some(s)`,
