@@ -197,6 +197,7 @@ fn find_solution_parallel(mut f: Field) -> Option<Field> {
     let pool = threadpool::ThreadPool::new(8);
     let (tx, rx) = std::sync::mpsc::channel();
     spawn_tasks(&mut f, &tx, &pool, SPAWN_DEPTH);
+    std::mem::drop(tx);
     rx.into_iter().find_map(|x| x)
 }
 
