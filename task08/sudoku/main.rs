@@ -193,7 +193,7 @@ fn spawn_tasks(f: &mut Field, tx: &std::sync::mpsc::Sender<Option<Field>>, pool:
 /// Если хотя бы одно решение `s` существует, возвращает `Some(s)`,
 /// в противном случае возвращает `None`.
 fn find_solution_parallel(mut f: Field) -> Option<Field> {
-    const SPAWN_DEPTH: i32 = 1;
+    const SPAWN_DEPTH: i32 = 2;
     let pool = threadpool::ThreadPool::new(8);
     let (tx, rx) = std::sync::mpsc::channel();
     spawn_tasks(&mut f, &tx, &pool, SPAWN_DEPTH);
