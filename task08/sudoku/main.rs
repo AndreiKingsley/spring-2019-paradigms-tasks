@@ -167,13 +167,25 @@ fn find_solution(f: &mut Field) -> Option<Field> {
     try_extend_field(f, |f_solved| f_solved.clone(), find_solution)
 }
 
+
 /// Перебирает все возможные решения головоломки, заданной параметром `f`, в несколько потоков.
 /// Если хотя бы одно решение `s` существует, возвращает `Some(s)`,
 /// в противном случае возвращает `None`.
 fn find_solution_parallel(mut f: Field) -> Option<Field> {
     let pool = threadpool::ThreadPool::new(8);
     let (tx, rx) = std::sync::mpsc::channel();
-    pool.execute(move || tx.send(find_solution(&mut f)).unwrap_or(()));
+    try_extend_field(
+	&mut f,
+	|f| {
+            tx.send(Some(f.clone())).unwrap_or(());
+   	}, 
+	|f| {
+            let tx = tx.clone();
+            let mut f_clone = f.clone();
+            pool.execute(move|| tx.send(find_solution(&mut f_clone)).unwrap_or(()));
+            None
+    	}
+    );
     rx.into_iter().find_map(|x| x)
 }
 
