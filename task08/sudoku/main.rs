@@ -1,4 +1,4 @@
-//! Это основной файл с домашним заданием по языку Rust (task08).
+﻿//! Это основной файл с домашним заданием по языку Rust (task08).
 //! Кроме него есть еще модуль `field.rs`, лежащий в этой же папке.
 //!
 //! Чтобы вам было легче ориентироваться, мы постарались прокомментировать весь код, насколько это возможно.
@@ -170,8 +170,8 @@ fn find_solution(f: &mut Field) -> Option<Field> {
 fn spawn_tasks(f: &mut Field, tx: &std::sync::mpsc::Sender<Option<Field>>, pool: &threadpool::ThreadPool, cur_depth: i32) {
     if cur_depth == 0 {
         let tx = tx.clone();
-        let mut f_clone = f.clone();
-        pool.execute(move || tx.send(find_solution(&mut f_clone)).unwrap_or(()));
+        let mut f = f.clone();
+        pool.execute(move || tx.send(find_solution(&mut f)).unwrap_or(()));
     } else {
         try_extend_field(
             f,
