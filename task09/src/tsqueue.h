@@ -12,7 +12,7 @@ extern "C" {
  */
 
 struct ThreadsafeQueue {
-    Queue q;
+    Queue q; // может лучше указаетель хранить?
     pthread_mutex_t m;
     pthread_cond_t cond;
 };
