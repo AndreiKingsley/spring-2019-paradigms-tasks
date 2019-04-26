@@ -1,7 +1,7 @@
 #include "tsqueue.h"
 
 void threadsafe_queue_init(ThreadsafeQueue *q) {
-    queue_init(&(q->q)); //Это конечно шок-контент я бы назвал переменную safe_q
+    queue_init(&(q->q));
     pthread_mutex_init(&(q->m), NULL);
     pthread_cond_init(&(q->cond), NULL);
 }
