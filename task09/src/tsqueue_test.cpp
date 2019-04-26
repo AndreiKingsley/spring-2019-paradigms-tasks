@@ -48,7 +48,7 @@ TEST_CASE("ThreadsafeQueue multithreaded ping-pong") {
             int *ptr_send = &a;
             threadsafe_queue_push(&qs[0], ptr_send);
             int *ptr_recieve =
-                    static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[1]));
+                static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[1]));
             REQUIRE(ptr_send == ptr_recieve);
             REQUIRE(*ptr_recieve == i + 1);
         }
@@ -59,7 +59,7 @@ TEST_CASE("ThreadsafeQueue multithreaded ping-pong") {
         ThreadsafeQueue *qs = static_cast<ThreadsafeQueue *>(_qs);
         for (int i = 0; i < PING_PONGS; ++i) {
             int *ptr_recieve =
-                    static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[0]));
+                static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[0]));
             (*ptr_recieve)++;
             threadsafe_queue_push(&qs[1], ptr_recieve);
         }
@@ -87,12 +87,12 @@ void *producer(void *_q) {
 void *consumer(void *_q) {
     ThreadsafeQueue *q = static_cast<ThreadsafeQueue *>(_q);
     for (int i = 0; i < ELEMENTS_PER_THREAD; i++) {
-                REQUIRE(threadsafe_queue_wait_and_pop(q) == nullptr);
+        REQUIRE(threadsafe_queue_wait_and_pop(q) == nullptr);
     }
     return nullptr;
 };
 
-TEST_CASE ("ThreadsafeQueue pushes from multiple threads") {
+TEST_CASE("ThreadsafeQueue pushes from multiple threads") {
     ThreadsafeQueue q;
     threadsafe_queue_init(&q);
 
