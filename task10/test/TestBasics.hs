@@ -21,7 +21,7 @@ testsBasics = testGroup "Unit tests for Basics tasks"
         take' 1 [1,2,3] @?= [1]
 
     , testCase "take' takes 3 element from infinity list" $
-        take' 1 [1,2,3..] @?= [1,2,3]
+        take' 3 [1..] @?= [1,2,3]
 
     , testCase "drop' drops 1 element from 3-element list" $
         drop' 1 [1,2,3] @?= [2,3]
