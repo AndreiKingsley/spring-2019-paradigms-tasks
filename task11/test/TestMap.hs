@@ -1,4 +1,4 @@
-﻿{-# LANGUAGE ScopedTypeVariables #-}  -- Включаем некоторые расширения компилятора.
+{-# LANGUAGE ScopedTypeVariables #-}  -- Включаем некоторые расширения компилятора.
 import Test.Tasty
 import Test.Tasty.HUnit
 import Data.Proxy
