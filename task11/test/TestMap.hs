@@ -1,4 +1,4 @@
-{-# LANGUAGE ScopedTypeVariables #-}  -- Включаем некоторые расширения компилятора.
+﻿{-# LANGUAGE ScopedTypeVariables #-}  -- Включаем некоторые расширения компилятора.
 import Test.Tasty
 import Test.Tasty.HUnit
 import Data.Proxy
@@ -27,7 +27,7 @@ mapTests :: Map m => String -> Proxy m -> TestTree
 mapTests name (_ :: Proxy m) =
     -- Чтобы можно было связать типовую переменную m здесь и в let ниже, нужно расширение ScopedTypeVariables.
     testGroup name [
-	testGroup "Test empty" [
+         testGroup "Test empty" [
             testCase "empty map is empty" $
                 let map = empty :: m Int String in
                 Map.null map @?= True
