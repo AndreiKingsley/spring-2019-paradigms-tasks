@@ -1,4 +1,4 @@
-{-|
+﻿{-|
   Реализация класса типов 'Map' в виде дерева поиска,
   необязательно сбалансированного, работает за линейное
   время в худшем случае.
@@ -8,9 +8,7 @@ import Map
 
 {-|
   Двоичное дерево поиска, необязательно сбалансированное.
-
   Инвариант: для любой вершины @v@:
-
   1. Все ключи в левом поддереве строго меньше ключа @v@.
   2. Все ключи в правом поддереве строго больше ключа @v@.
 -}
@@ -27,11 +25,11 @@ data NaiveTree k a =
   что все ключи из @l@ строго меньше ключей из @r@.
 -}
 merge :: NaiveTree k a -> NaiveTree k a -> NaiveTree k a
-merge = undefined
+merge Nil              r = r
+merge (Node k v ll rl) r = Node k v ll (merge rl r)
 
 {-|
   Реализация функций 'Map' для 'NaiveTree'.
-
   'empty', 'singleton' и 'Map.null' работают за /O(1)/.
   Если /n/ – количество вершин дерева, а /h/ – высота дерева,
   то 'fromList' работает за /O(nh)/, 'toAscList' работает за /O(n^2)/,
@@ -39,20 +37,32 @@ merge = undefined
   Остальные функции работают за /O(h)/,
   причём каждая функция должна спускаться вниз по дереву и
   подниматься обратно не больше одного раза.
-
   Скорее всего, при реализации вам потребуется функция 'merge'.
 -}
 instance Map NaiveTree where
-    empty = undefined
+    empty = Nil
 
-    singleton = undefined
+    singleton k a = Node k a Nil Nil
 
-    toAscList = undefined
+    toAscList Nil            = []
+    toAscList (Node k a l r) = toAscList l ++ ((k, a) : toAscList r)
 
-    alter = undefined
+    alter f k Nil = maybe empty (singleton k) (f Nothing)
+    alter f k (Node k' a l r)
+      | k < k'    = Node k' a   (alter f k l) r
+      | k > k'    = Node k' a l (alter f k r)
+      | otherwise = case f (Just a) of
+          Just v  -> Node k' v l r
+          Nothing -> merge l r
 
-    lookup = undefined
+    lookup _ Nil = Nothing
+    lookup k (Node k' a l r)
+      | k < k'    = Map.lookup k l
+      | k > k'    = Map.lookup k r
+      | otherwise = Just a
 
-    null = undefined
+    null Nil = True
+    null _   = False
 
-    size = undefined
+    size Nil            = 0
+    size (Node _ _ l r) = size l + 1 + size r
