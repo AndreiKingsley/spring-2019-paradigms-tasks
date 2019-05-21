@@ -38,7 +38,7 @@ mapTests name (_ :: Proxy m) =
                 let map = singleton 1 "one" :: m Int String in
                 Map.size map @?= 1
         ],
-	
+
         testGroup "Test toAscList . fromList" [
             testCase "toAscList . fromList sorts list" $
                 let tr = fromList [(2, "a"), (1, "b"), (3, "c"), (1, "x")] :: m Int String in
