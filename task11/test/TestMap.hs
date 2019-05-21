@@ -27,6 +27,18 @@ mapTests :: Map m => String -> Proxy m -> TestTree
 mapTests name (_ :: Proxy m) =
     -- Чтобы можно было связать типовую переменную m здесь и в let ниже, нужно расширение ScopedTypeVariables.
     testGroup name [
+	testGroup "Test empty" [
+            testCase "empty map is empty" $
+                let map = empty :: m Int String in
+                Map.null map @?= True
+        ],
+
+        testGroup "Test singleton" [
+            testCase "singleton return a singleton map" $
+                let map = singleton 1 "one" :: m Int String in
+                Map.size map @?= 1
+        ],
+	
         testGroup "Test toAscList . fromList" [
             testCase "toAscList . fromList sorts list" $
                 let tr = fromList [(2, "a"), (1, "b"), (3, "c"), (1, "x")] :: m Int String in
